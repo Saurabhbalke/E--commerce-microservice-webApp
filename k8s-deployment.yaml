@@ -342,7 +342,7 @@ spec:
     spec:
       containers:
       - name: order-service
-        image: saurabhbalke/ecom-order-service:latest
+        image: saurabhbalke/ecom-order-service:v2
         imagePullPolicy: Always
         ports:
         - containerPort: 3004
@@ -395,7 +395,7 @@ spec:
     spec:
       containers:
       - name: payment-service
-        image: saurabhbalke/ecom-payment-service:latest
+        image: saurabhbalke/ecom-payment-service:v2
         imagePullPolicy: Always
         ports:
         - containerPort: 3005
@@ -501,7 +501,7 @@ spec:
     spec:
       containers:
       - name: notification-service
-        image: saurabhbalke/ecom-notification-service:latest
+        image: saurabhbalke/ecom-notification-service:v2
         imagePullPolicy: Always
         env:
         - name: RABBIT_URI
