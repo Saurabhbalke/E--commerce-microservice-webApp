@@ -594,7 +594,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: saurabhbalke/ecom-frontend:latest
+        image: saurabhbalke/ecom-frontend:v2
         ports:
         - containerPort: 80
         resources:
