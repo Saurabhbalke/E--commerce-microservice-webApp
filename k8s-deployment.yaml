@@ -288,7 +288,7 @@ spec:
     spec:
       containers:
       - name: cart-service
-        image: saurabhbalke/ecom-cart-service:latest
+        image: saurabhbalke/ecom-cart-service:v2
         ports:
         - containerPort: 3003
         env:
