@@ -1,12 +1,20 @@
 const path = require('path');
+const fs = require('fs');
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 
 // --- Config ---
-const USER_PROTO_PATH = path.join(__dirname, '../../protos/user.proto');
-const PRODUCT_PROTO_PATH = path.join(__dirname, '../../protos/product.proto');
-const USER_SERVICE_URL = process.env.USER_SERVICE_GRPC_URL;
-const PRODUCT_SERVICE_URL = process.env.PRODUCT_SERVICE_GRPC_URL;
+// Check for local protos (Docker) first, then relative path (local dev)
+const localUserProto = path.join(__dirname, '../protos/user.proto');
+const parentUserProto = path.join(__dirname, '../../protos/user.proto');
+const USER_PROTO_PATH = fs.existsSync(localUserProto) ? localUserProto : parentUserProto;
+
+const localProductProto = path.join(__dirname, '../protos/product.proto');
+const parentProductProto = path.join(__dirname, '../../protos/product.proto');
+const PRODUCT_PROTO_PATH = fs.existsSync(localProductProto) ? localProductProto : parentProductProto;
+
+const USER_SERVICE_URL = process.env.USER_SERVICE_GRPC_URL || process.env.USER_GRPC_URL;
+const PRODUCT_SERVICE_URL = process.env.PRODUCT_SERVICE_GRPC_URL || process.env.PRODUCT_GRPC_URL;
 
 // --- Load Protos ---
 const userPackageDef = protoLoader.loadSync(USER_PROTO_PATH, {});

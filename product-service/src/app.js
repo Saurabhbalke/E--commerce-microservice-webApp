@@ -12,7 +12,11 @@ const Product = require('./models/Product'); // Used by gRPC
 const PORT = process.env.PORT || 3002;
 const GRPC_PORT = process.env.GRPC_PORT || 50052;
 const MONGO_URI = process.env.MONGO_URI;
-const PROTO_PATH = path.join(__dirname, '../../protos/product.proto');
+// Check for local protos (Docker) first, then relative path (local dev)
+const fs = require('fs');
+const localProtoPath = path.join(__dirname, '../protos/product.proto');
+const parentProtoPath = path.join(__dirname, '../../protos/product.proto');
+const PROTO_PATH = fs.existsSync(localProtoPath) ? localProtoPath : parentProtoPath;
 
 // --- gRPC Server Setup ---
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {

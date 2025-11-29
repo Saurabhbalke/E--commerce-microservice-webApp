@@ -8,6 +8,8 @@ RUN npm install --omit=dev
 
 COPY . .
 
+# Protos will be copied by build script
+
 EXPOSE 3001 50051
 
-CMD ["node", "-r", "dotenv/config", "src/app.js"]
+CMD ["node", "src/app.js"]

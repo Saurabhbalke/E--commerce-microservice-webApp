@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 3005
 
-CMD ["node", "-r", "dotenv/config", "src/app.js"]
+CMD ["node", "src/app.js"]
