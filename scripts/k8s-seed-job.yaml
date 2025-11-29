@@ -13,11 +13,17 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
           - |
+            set -e
+            mkdir -p /app
+            
+            # Create package.json
+            echo '{"name":"seed","dependencies":{"mongodb":"^6.3.0","bcryptjs":"^2.4.3"}}' > /app/package.json
+            
             # Install dependencies
-            npm install mongodb@6 bcryptjs@2 --save
+            cd /app && npm install --loglevel=error
             
             # Create seed script
-            cat << 'EOF' > seed.js
+            cat << 'EOF' > /app/seed.js
             const { MongoClient, ObjectId } = require('mongodb');
             const bcrypt = require('bcryptjs');
 
@@ -106,8 +112,8 @@ spec:
             seed().catch(e => { console.error('❌ Error:', e); process.exit(1); });
             EOF
             
-            # Run seed script
-            node seed.js
+            # Run seed script from /app directory
+            cd /app && node seed.js
         resources:
           requests:
             memory: "128Mi"
