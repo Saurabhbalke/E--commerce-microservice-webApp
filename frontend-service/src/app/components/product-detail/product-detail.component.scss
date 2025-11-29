@@ -1,0 +1,10 @@
+img {
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.input-group {
+  input {
+    pointer-events: none;
+  }
+}

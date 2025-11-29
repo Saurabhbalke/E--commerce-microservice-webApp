@@ -1,0 +1,12 @@
+.input-group {
+  max-width: 120px;
+  
+  input {
+    pointer-events: none;
+  }
+}
+
+img {
+  max-height: 80px;
+  object-fit: cover;
+}

@@ -1,0 +1,101 @@
+<div class="container mt-4">
+  <h2 class="mb-4">Checkout</h2>
+
+  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{ error }}
+    <button type="button" class="btn-close" (click)="error = ''" aria-label="Close"></button>
+  </div>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && (!cart || !cart.items || cart.items.length === 0)" class="text-center mt-5">
+    <h4>Your cart is empty</h4>
+    <button class="btn btn-primary mt-3" routerLink="/products">
+      Continue Shopping
+    </button>
+  </div>
+
+  <div *ngIf="!loading && cart && cart.items && cart.items.length > 0">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">Order Items</h5>
+          </div>
+          <div class="card-body">
+            <div class="row mb-3 pb-3 border-bottom" *ngFor="let item of cart.items">
+              <div class="col-md-2">
+                <img [src]="defaultImage" class="img-fluid rounded" [alt]="item.name">
+              </div>
+              <div class="col-md-5">
+                <h6>{{ item.name }}</h6>
+              </div>
+              <div class="col-md-2">
+                <span>Qty: {{ item.quantity }}</span>
+              </div>
+              <div class="col-md-3 text-end">
+                <strong>${{ (item.price * item.quantity).toFixed(2) }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">Payment Information</h5>
+          </div>
+          <div class="card-body">
+            <p class="text-muted">
+              <small>
+                This is a demo application. Payment will be processed with a 10% failure rate for demonstration purposes.
+              </small>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="mb-0">Order Summary</h5>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Subtotal:</span>
+              <span>${{ getTotal().toFixed(2) }}</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Shipping:</span>
+              <span>Free</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Tax:</span>
+              <span>$0.00</span>
+            </div>
+            <hr>
+            <div class="d-flex justify-content-between mb-3">
+              <strong>Total:</strong>
+              <strong class="text-primary">${{ getTotal().toFixed(2) }}</strong>
+            </div>
+            <div class="d-grid gap-2">
+              <button 
+                class="btn btn-primary btn-lg" 
+                (click)="placeOrder()"
+                [disabled]="processing">
+                <span *ngIf="processing" class="spinner-border spinner-border-sm me-2"></span>
+                {{ processing ? 'Processing...' : 'Place Order' }}
+              </button>
+              <button class="btn btn-outline-secondary" routerLink="/cart">
+                Back to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

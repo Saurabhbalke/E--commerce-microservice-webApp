@@ -1,0 +1,81 @@
+<div class="container mt-4">
+  <h2 class="mb-4">My Orders</h2>
+
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && orders.length === 0" class="text-center mt-5">
+    <h4>No orders yet</h4>
+    <p class="text-muted">Start shopping to see your orders here</p>
+    <button class="btn btn-primary mt-3" routerLink="/products">
+      Browse Products
+    </button>
+  </div>
+
+  <div *ngIf="!loading && orders.length > 0">
+    <div class="card mb-3" *ngFor="let order of orders">
+      <div class="card-header">
+        <div class="row align-items-center">
+          <div class="col-md-3">
+            <small class="text-muted">Order ID:</small><br>
+            <strong>{{ order._id }}</strong>
+          </div>
+          <div class="col-md-3">
+            <small class="text-muted">Date:</small><br>
+            <strong>{{ order.createdAt | date: 'medium' }}</strong>
+          </div>
+          <div class="col-md-3">
+            <small class="text-muted">Total:</small><br>
+            <strong class="text-primary">${{ order.totalAmount.toFixed(2) }}</strong>
+          </div>
+          <div class="col-md-3 text-end">
+            <span [ngClass]="getStatusClass(order.status)">{{ order.status }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row mb-2">
+          <div class="col-md-4">
+            <strong>Payment Status:</strong>
+            <span [ngClass]="getPaymentStatusClass(order.paymentStatus)" class="ms-2">
+              {{ order.paymentStatus }}
+            </span>
+          </div>
+          <div class="col-md-4">
+            <strong>Stock Status:</strong>
+            <span [ngClass]="getStockStatusClass(order.stockStatus)" class="ms-2">
+              {{ order.stockStatus }}
+            </span>
+          </div>
+          <div class="col-md-4" *ngIf="order.failureReason">
+            <strong class="text-danger">Failure Reason:</strong>
+            <span class="ms-2">{{ order.failureReason }}</span>
+          </div>
+        </div>
+        
+        <hr>
+        
+        <h6 class="mb-3">Items:</h6>
+        <div class="row" *ngFor="let item of order.items">
+          <div class="col-md-6">
+            Product ID: {{ item.productId }}
+          </div>
+          <div class="col-md-2">
+            Qty: {{ item.quantity }}
+          </div>
+          <div class="col-md-2">
+            Price: ${{ item.price.toFixed(2) }}
+          </div>
+          <div class="col-md-2 text-end">
+            <strong>${{ (item.price * item.quantity).toFixed(2) }}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

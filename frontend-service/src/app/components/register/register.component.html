@@ -1,0 +1,83 @@
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 class="card-title text-center mb-4">Register</h2>
+          
+          <div *ngIf="error" class="alert alert-danger" role="alert">
+            {{ error }}
+          </div>
+
+          <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+            <div class="mb-3">
+              <label for="name" class="form-label">Name</label>
+              <input 
+                type="text" 
+                class="form-control" 
+                id="name" 
+                [(ngModel)]="registerData.name"
+                name="name"
+                required
+                minlength="2"
+                placeholder="Enter your name">
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input 
+                type="email" 
+                class="form-control" 
+                id="email" 
+                [(ngModel)]="registerData.email"
+                name="email"
+                required
+                email
+                placeholder="Enter your email">
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Password</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="password" 
+                [(ngModel)]="registerData.password"
+                name="password"
+                required
+                minlength="6"
+                placeholder="Enter your password">
+            </div>
+
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input 
+                type="password" 
+                class="form-control" 
+                id="confirmPassword" 
+                [(ngModel)]="confirmPassword"
+                name="confirmPassword"
+                required
+                minlength="6"
+                placeholder="Confirm your password">
+            </div>
+
+            <div class="d-grid">
+              <button 
+                type="submit" 
+                class="btn btn-primary"
+                [disabled]="!registerForm.valid || loading">
+                <span *ngIf="loading" class="spinner-border spinner-border-sm me-2"></span>
+                {{ loading ? 'Registering...' : 'Register' }}
+              </button>
+            </div>
+          </form>
+
+          <div class="text-center mt-3">
+            <p>Already have an account? <a routerLink="/login">Login here</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
