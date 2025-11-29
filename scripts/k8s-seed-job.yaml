@@ -1,0 +1,119 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: seed-database
+  namespace: ecommerce
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      containers:
+      - name: seed
+        image: node:18-alpine
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            # Install dependencies
+            npm install mongodb@6 bcryptjs@2 --save
+            
+            # Create seed script
+            cat << 'EOF' > seed.js
+            const { MongoClient, ObjectId } = require('mongodb');
+            const bcrypt = require('bcryptjs');
+
+            const MONGO_HOST = 'mongodb';
+            const MONGO_PORT = '27017';
+
+            const DATABASES = {
+              user: `mongodb://${MONGO_HOST}:${MONGO_PORT}/user_db`,
+              product: `mongodb://${MONGO_HOST}:${MONGO_PORT}/product_db`,
+              inventory: `mongodb://${MONGO_HOST}:${MONGO_PORT}/inventory_db`,
+              cart: `mongodb://${MONGO_HOST}:${MONGO_PORT}/cart_db`,
+              order: `mongodb://${MONGO_HOST}:${MONGO_PORT}/order_db`,
+              payment: `mongodb://${MONGO_HOST}:${MONGO_PORT}/payment_db`,
+            };
+
+            const users = [
+              { _id: new ObjectId(), name: 'John Doe', email: 'john@example.com', password: 'password123', role: 'customer', createdAt: new Date() },
+              { _id: new ObjectId(), name: 'Jane Smith', email: 'jane@example.com', password: 'password123', role: 'customer', createdAt: new Date() },
+              { _id: new ObjectId(), name: 'Admin User', email: 'admin@example.com', password: 'admin123', role: 'admin', createdAt: new Date() },
+            ];
+
+            const products = [
+              { _id: new ObjectId(), name: 'Wireless Bluetooth Headphones', description: 'Premium noise-canceling wireless headphones with 30-hour battery life', price: 149.99, category: 'Electronics', imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400', createdAt: new Date() },
+              { _id: new ObjectId(), name: 'Smart Watch Pro', description: 'Advanced fitness tracking, heart rate monitor, and GPS', price: 299.99, category: 'Electronics', imageUrl: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400', createdAt: new Date() },
+              { _id: new ObjectId(), name: 'Laptop Stand Aluminum', description: 'Ergonomic adjustable laptop stand for better posture', price: 49.99, category: 'Accessories', imageUrl: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400', createdAt: new Date() },
+              { _id: new ObjectId(), name: 'Mechanical Keyboard RGB', description: 'Cherry MX switches with customizable RGB backlighting', price: 129.99, category: 'Electronics', imageUrl: 'https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=400', createdAt: new Date() },
+              { _id: new ObjectId(), name: 'Wireless Mouse', description: 'Ergonomic wireless mouse with precision tracking', price: 39.99, category: 'Electronics', imageUrl: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400', createdAt: new Date() },
+              { _id: new ObjectId(), name: 'USB-C Hub 7-in-1', description: 'Multi-port adapter with HDMI, USB 3.0, SD card reader', price: 59.99, category: 'Accessories', imageUrl: 'https://images.unsplash.com/photo-1625723044792-44de16ccb4e9?w=400', createdAt: new Date() },
+              { _id: new ObjectId(), name: 'Portable Charger 20000mAh', description: 'High-capacity power bank with fast charging support', price: 44.99, category: 'Electronics', imageUrl: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400', createdAt: new Date() },
+              { _id: new ObjectId(), name: 'Noise Canceling Earbuds', description: 'True wireless earbuds with active noise cancellation', price: 179.99, category: 'Electronics', imageUrl: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400', createdAt: new Date() },
+              { _id: new ObjectId(), name: 'Webcam HD 1080p', description: 'Full HD webcam with built-in microphone for video calls', price: 79.99, category: 'Electronics', imageUrl: 'https://images.unsplash.com/photo-1587826080692-f439cd0b70da?w=400', createdAt: new Date() },
+              { _id: new ObjectId(), name: 'Desk Lamp LED', description: 'Adjustable LED desk lamp with multiple brightness levels', price: 34.99, category: 'Home Office', imageUrl: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400', createdAt: new Date() },
+            ];
+
+            async function seed() {
+              console.log('🌱 Starting database seed...\n');
+              
+              // Seed Users
+              let client = new MongoClient(DATABASES.user);
+              try {
+                await client.connect();
+                const collection = client.db().collection('users');
+                await collection.deleteMany({});
+                const usersWithHash = await Promise.all(users.map(async u => ({...u, password: await bcrypt.hash(u.password, 10)})));
+                await collection.insertMany(usersWithHash);
+                console.log('✅ Inserted', users.length, 'users');
+              } finally { await client.close(); }
+
+              // Seed Products
+              client = new MongoClient(DATABASES.product);
+              try {
+                await client.connect();
+                const collection = client.db().collection('products');
+                await collection.deleteMany({});
+                await collection.insertMany(products);
+                console.log('✅ Inserted', products.length, 'products');
+              } finally { await client.close(); }
+
+              // Seed Inventory
+              client = new MongoClient(DATABASES.inventory);
+              try {
+                await client.connect();
+                const collection = client.db().collection('inventories');
+                await collection.deleteMany({});
+                const inventory = products.map((p, i) => ({ _id: new ObjectId(), productId: p._id.toString(), productName: p.name, quantity: 50 + (i * 10), reservedQuantity: 0, updatedAt: new Date() }));
+                await collection.insertMany(inventory);
+                console.log('✅ Inserted', inventory.length, 'inventory records');
+              } finally { await client.close(); }
+
+              // Clear other DBs
+              for (const dbName of ['cart', 'order', 'payment']) {
+                client = new MongoClient(DATABASES[dbName]);
+                try {
+                  await client.connect();
+                  await client.db().collection(dbName + 's').deleteMany({});
+                  console.log('✅ Cleared', dbName + 's');
+                } finally { await client.close(); }
+              }
+
+              console.log('\n✨ Seed completed!');
+              console.log('\n🔑 Test Accounts:');
+              console.log('   Customer: john@example.com / password123');
+              console.log('   Admin: admin@example.com / admin123');
+            }
+
+            seed().catch(e => { console.error('❌ Error:', e); process.exit(1); });
+            EOF
+            
+            # Run seed script
+            node seed.js
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+      restartPolicy: Never
+  backoffLimit: 3

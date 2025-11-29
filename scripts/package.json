@@ -1,0 +1,13 @@
+{
+  "name": "ecom-scripts",
+  "version": "1.0.0",
+  "description": "Database scripts for E-Commerce application",
+  "scripts": {
+    "seed": "node seed-data.js",
+    "seed:k8s": "MONGO_HOST=mongodb node seed-data.js"
+  },
+  "dependencies": {
+    "mongodb": "^6.3.0",
+    "bcryptjs": "^2.4.3"
+  }
+}
