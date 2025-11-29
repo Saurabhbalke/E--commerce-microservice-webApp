@@ -1,5 +1,10 @@
 const Order = require('../models/Order');
-const { publishMessage } = require('../../../shared/utils/rabbitMQ');
+const fs = require('fs');
+const path = require('path');
+const localSharedPath = path.join(__dirname, '../../shared/utils/rabbitMQ');
+const parentSharedPath = path.join(__dirname, '../../../shared/utils/rabbitMQ');
+const sharedPath = fs.existsSync(localSharedPath + '.js') ? localSharedPath : parentSharedPath;
+const { publishMessage } = require(sharedPath);
 // In a real app, you'd call the Cart service to get cart contents
 // For now, we assume items are passed in the request body
 

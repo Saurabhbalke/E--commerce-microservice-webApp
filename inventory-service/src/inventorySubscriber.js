@@ -1,4 +1,9 @@
-const { consumeMessages, publishMessage, getChannel } = require('../../shared/utils/rabbitMQ');
+const fs = require('fs');
+const path = require('path');
+const localSharedPath = path.join(__dirname, '../shared/utils/rabbitMQ');
+const parentSharedPath = path.join(__dirname, '../../shared/utils/rabbitMQ');
+const sharedPath = fs.existsSync(localSharedPath + '.js') ? localSharedPath : parentSharedPath;
+const { consumeMessages, publishMessage, getChannel } = require(sharedPath);
 const Inventory = require('./models/Inventory');
 const StockReservation = require('./models/StockReservation');
 

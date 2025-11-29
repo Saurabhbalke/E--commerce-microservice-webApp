@@ -27,6 +27,15 @@ cp -r ./protos ./product-service/protos
 cp -r ./protos ./cart-service/protos
 echo "✅ Proto files copied"
 
+# Copy shared folder to services that need RabbitMQ
+echo ""
+echo ">>> Copying shared folder to services..."
+cp -r ./shared ./order-service/shared
+cp -r ./shared ./payment-service/shared
+cp -r ./shared ./inventory-service/shared
+cp -r ./shared ./notification-service/shared
+echo "✅ Shared folder copied"
+
 # Function to build and push image
 build_and_push() {
     SERVICE_NAME=$1
@@ -42,13 +51,17 @@ build_and_push() {
     echo "✅ $SERVICE_NAME completed!"
 }
 
-# Function to cleanup protos after build
-cleanup_protos() {
+# Function to cleanup copied files after build
+cleanup_copied_files() {
     echo ""
-    echo ">>> Cleaning up copied proto files..."
+    echo ">>> Cleaning up copied files..."
     rm -rf ./user-service/protos
     rm -rf ./product-service/protos
     rm -rf ./cart-service/protos
+    rm -rf ./order-service/shared
+    rm -rf ./payment-service/shared
+    rm -rf ./inventory-service/shared
+    rm -rf ./notification-service/shared
     echo "✅ Cleanup done"
 }
 
@@ -63,8 +76,8 @@ build_and_push "notification-service" "./notification-service"
 build_and_push "api-gateway" "./api-gateway"
 build_and_push "frontend" "./frontend-service"
 
-# Cleanup copied protos
-cleanup_protos
+# Cleanup copied files
+cleanup_copied_files
 
 echo ""
 echo "========================================="

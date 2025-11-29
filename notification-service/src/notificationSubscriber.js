@@ -1,4 +1,9 @@
-const { consumeMessages, getChannel, NOTIFICATION_QUEUE } = require('../../shared/utils/rabbitMQ');
+const fs = require('fs');
+const path = require('path');
+const localSharedPath = path.join(__dirname, '../shared/utils/rabbitMQ');
+const parentSharedPath = path.join(__dirname, '../../shared/utils/rabbitMQ');
+const sharedPath = fs.existsSync(localSharedPath + '.js') ? localSharedPath : parentSharedPath;
+const { consumeMessages, getChannel, NOTIFICATION_QUEUE } = require(sharedPath);
 
 /**
  * Mock function to "send an email".
