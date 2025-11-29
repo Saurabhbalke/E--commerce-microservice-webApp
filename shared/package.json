@@ -1,0 +1,10 @@
+{
+  "name": "@ecom/shared-utils",
+  "version": "1.0.0",
+  "description": "Shared utilities (RabbitMQ) for the e-com monorepo",
+  "main": "utils/rabbitMQ.js",
+  "private": true,
+  "dependencies": {
+    "amqplib": "^0.10.3"
+  }
+}

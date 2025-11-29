@@ -1,0 +1,24 @@
+// This is the file you provided
+syntax = "proto3";
+
+package product;
+
+// The request message containing the product ID
+message ProductRequest {
+string productId = 1;
+}
+
+// The response message with product details
+message ProductResponse {
+string productId = 1;
+string name = 2;
+string description = 3;
+double price = 4;
+string category = 5;
+bool exists = 6; // true if product found
+}
+
+// The product service definition
+service ProductService {
+rpc GetProductById (ProductRequest) returns (ProductResponse);
+}

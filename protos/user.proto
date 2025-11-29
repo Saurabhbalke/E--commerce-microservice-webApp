@@ -1,0 +1,19 @@
+// This is the file you provided
+syntax = "proto3";
+
+package user;
+
+message UserRequest {
+string userId = 1;
+}
+
+message UserResponse {
+string userId = 1;
+string email = 2;
+string name = 3;
+bool exists = 4;
+}
+
+service UserService {
+rpc GetUserById(UserRequest) returns (UserResponse);
+}

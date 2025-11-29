@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  # MongoDB for all services
+  mongo:
+    image: mongo:5.0
+    container_name: mongo-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - ecom-network
+
+  # RabbitMQ for the Saga
+  rabbitmq:
+    image: rabbitmq:3.9-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # AMQP port for services
+      - "15672:15672" # Management UI port
+    networks:
+      - ecom-network
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+
+volumes:
+  mongo-data:
+
+networks:
+  ecom-network:
+    driver: bridge

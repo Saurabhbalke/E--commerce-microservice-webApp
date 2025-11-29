@@ -1,0 +1,16 @@
+{
+"name": "cart-service",
+"version": "1.0.0",
+"description": "Cart microservice",
+"main": "src/app.js",
+"scripts": {
+"start": "node -r dotenv/config src/app.js"
+},
+"dependencies": {
+"@grpc/grpc-js": "^1.10.9",
+"@grpc/proto-loader": "^0.7.13",
+"dotenv": "^16.4.5",
+"express": "^4.19.2",
+"mongoose": "^8.4.3"
+}
+}

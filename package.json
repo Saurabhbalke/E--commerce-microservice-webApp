@@ -1,0 +1,32 @@
+{
+  "name": "ecom-monorepo-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Root for the e-commerce microservices monorepo",
+  "workspaces": [
+    "shared",
+    "api-gateway",
+    "user-service",
+    "product-service",
+    "cart-service",
+    "order-service",
+    "inventory-service",
+    "payment-service",
+    "notification-service"
+  ],
+  "scripts": {
+    "install-all": "npm install",
+    "dev": "concurrently --kill-others-on-fail -c \"auto\" -n \"GATEWAY,USER,PRODUCT,CART,ORDER,INVENTORY,PAYMENT,NOTIFY\" \"npm:dev:api-gateway\" \"npm:dev:user-service\" \"npm:dev:product-service\" \"npm:dev:cart-service\" \"npm:dev:order-service\" \"npm:dev:inventory-service\" \"npm:dev:payment-service\" \"npm:dev:notification-service\"",
+    "dev:api-gateway": "npm start --workspace=api-gateway",
+    "dev:user-service": "npm start --workspace=user-service",
+    "dev:product-service": "npm start --workspace=product-service",
+    "dev:cart-service": "npm start --workspace=cart-service",
+    "dev:order-service": "npm start --workspace=order-service",
+    "dev:inventory-service": "npm start --workspace=inventory-service",
+    "dev:payment-service": "npm start --workspace=payment-service",
+    "dev:notification-service": "npm start --workspace=notification-service"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
