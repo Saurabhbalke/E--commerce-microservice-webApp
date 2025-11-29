@@ -343,6 +343,7 @@ spec:
       containers:
       - name: order-service
         image: saurabhbalke/ecom-order-service:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3004
         env:
@@ -395,6 +396,7 @@ spec:
       containers:
       - name: payment-service
         image: saurabhbalke/ecom-payment-service:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3005
         env:
@@ -447,6 +449,7 @@ spec:
       containers:
       - name: inventory-service
         image: saurabhbalke/ecom-inventory-service:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3006
         env:
@@ -499,6 +502,7 @@ spec:
       containers:
       - name: notification-service
         image: saurabhbalke/ecom-notification-service:latest
+        imagePullPolicy: Always
         env:
         - name: RABBIT_URI
           value: "amqp://guest:guest@rabbitmq:5672"
@@ -530,6 +534,7 @@ spec:
       containers:
       - name: api-gateway
         image: saurabhbalke/ecom-api-gateway:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 3008
         env:
